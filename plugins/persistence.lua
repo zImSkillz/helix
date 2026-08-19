@@ -104,6 +104,14 @@ if (SERVER) then
 				entity:Spawn()
 				entity:Activate()
 
+				if (istable(v.NetworkVar)) then
+					for var, value in pairs(v.NetworkVar) do
+						local func = entity["Set" .. var]
+						if not isfunction(func) or value == nil then continue end
+						func(value)
+					end
+				end
+
 				if (v.bNoCollision) then
 					entity:SetCollisionGroup(COLLISION_GROUP_WORLD)
 				end
@@ -151,6 +159,7 @@ if (SERVER) then
 				data.Color = v:GetColor()
 				data.Material = v:GetMaterial()
 				data.bNoCollision = v:GetCollisionGroup() == COLLISION_GROUP_WORLD
+				data.NetworkVar = v.GetNetworkVars and v:GetNetworkVars() or nil
 
 				local materials = v:GetMaterials()
 
